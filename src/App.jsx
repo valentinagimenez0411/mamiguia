@@ -201,8 +201,8 @@ export default function App() {
 
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 mb-12">
                 <div className="text-left">
-                  <p className="text-slate-500 line-through text-2xl font-bold">$47.00</p>
-                  <p className="text-6xl md:text-7xl font-black text-rose-500">$19.90</p>
+                  <p className="text-slate-500 line-through text-2xl font-bold">$40.00</p>
+                  <p className="text-6xl md:text-7xl font-black text-rose-500">$15,00</p>
                 </div>
                 <div className="h-12 w-[1px] bg-slate-800 hidden md:block"></div>
                 <div className="text-left max-w-[200px]">
