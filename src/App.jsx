@@ -28,7 +28,7 @@ const FAQItem = ({ question, answer }) => {
 
 
 export default function App() {
-  const HOTMART_LINK = "#"; // Reemplazar con el enlace real
+  const HOTMART_LINK = "https://pay.hotmart.com/S105827106G"; // 
 
   return (
     <div className="min-h-screen bg-white selection:bg-rose-100 selection:text-rose-900 font-sans">
@@ -162,7 +162,7 @@ export default function App() {
                   <div className="bg-rose-500 h-2 w-20 rounded-full"></div>
                   <h3 className="text-3xl font-black text-slate-900">¿Qué incluye la Guía?</h3>
                   <ul className="space-y-4">
-                    {["PDF interactivo de 80+ páginas", "Guía rápida de posiciones", "Checklist de señales de alerta", "Acceso a comunidad VIP de mamás", "Actualizaciones gratuitas"].map((text, i) => (
+                    {["PDF interactivo de 50+ páginas", "Guía rápida de posiciones", "Checklist de señales de alerta","Actualizaciones gratuitas"].map((text, i) => (
                       <li key={i} className="flex items-center gap-3 text-slate-600 font-medium">
                         <CheckCircle2 className="text-green-500" size={20} /> {text}
                       </li>
