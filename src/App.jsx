@@ -89,7 +89,7 @@ const LactanciaAI = () => {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-4 md:right-6 z-[70] w-[calc(100vw-2rem)] max-w-md bg-white rounded-3xl shadow-2xl border border-rose-100 overflow-hidden">
+        <div className="fixed right-4 bottom-4 md:right-6 md:bottom-6 z-[70] w-[calc(100vw-2rem)] max-w-md max-h-[calc(100vh-2rem)] bg-white rounded-3xl shadow-2xl border border-rose-100 overflow-hidden flex flex-col">
           <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="bg-rose-500 h-10 w-10 rounded-full flex items-center justify-center">
@@ -110,7 +110,7 @@ const LactanciaAI = () => {
             </button>
           </div>
 
-          <div className="h-96 overflow-y-auto p-5 space-y-4 bg-rose-50/30">
+          <div className="flex-1 min-h-[220px] max-h-[55vh] overflow-y-auto p-5 space-y-4 bg-rose-50/30">
             {messages.map((message, index) => (
               <div
                 key={index}
