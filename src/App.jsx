@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { 
   Heart, CheckCircle2, Droplets, Clock, ChevronDown, 
   ChevronUp, Star, ShoppingBag, ArrowRight, Download,
-  ShieldCheck, Smartphone, Users, Quote, Info, XCircle, Sparkles
+  ShieldCheck, Smartphone, Users, Quote, Info, XCircle, Sparkles,
+  MessageCircle, Send, Loader2, Bot, X
 } from 'lucide-react';
-
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +25,151 @@ const FAQItem = ({ question, answer }) => {
     </div>
   );
 };
+
+const LactanciaAI = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [messages, setMessages] = useState([
+    {
+      role: "assistant",
+      content:
+        "Hola, soy Lía, tu asistente virtual de lactancia. Puedo ayudarte con agarre, dolor, producción, posiciones, extracción y dudas frecuentes. Cuéntame qué está pasando."
+    }
+  ]);
+
+  const sendMessage = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMessage = { role: "user", content: input.trim() };
+    const nextMessages = [...messages, userMessage];
+
+    setMessages(nextMessages);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/lactancia-ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: nextMessages })
+      });
+
+      const data = await response.json();
+
+      setMessages([
+        ...nextMessages,
+        {
+          role: "assistant",
+          content: data.answer || "Perdón, no pude responder en este momento."
+        }
+      ]);
+    } catch (error) {
+      setMessages([
+        ...nextMessages,
+        {
+          role: "assistant",
+          content:
+            "Hubo un problema al conectar con la IA. Intenta nuevamente en unos segundos."
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-6 right-6 z-[60] bg-rose-500 text-white h-16 w-16 rounded-full shadow-2xl shadow-rose-200 flex items-center justify-center hover:bg-rose-600 transition-all"
+        aria-label="Abrir chat de lactancia"
+      >
+        <MessageCircle size={28} />
+      </button>
+
+      {isOpen && (
+        <div className="fixed bottom-24 right-4 md:right-6 z-[70] w-[calc(100vw-2rem)] max-w-md bg-white rounded-3xl shadow-2xl border border-rose-100 overflow-hidden">
+          <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-rose-500 h-10 w-10 rounded-full flex items-center justify-center">
+                <Bot size={22} />
+              </div>
+              <div>
+                <p className="font-black leading-tight">Lía IA</p>
+                <p className="text-xs text-slate-300">Experta virtual en lactancia</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setIsOpen(false)}
+              className="text-slate-300 hover:text-white transition-colors"
+              aria-label="Cerrar chat"
+            >
+              <X size={22} />
+            </button>
+          </div>
+
+          <div className="h-96 overflow-y-auto p-5 space-y-4 bg-rose-50/30">
+            {messages.map((message, index) => (
+              <div
+                key={index}
+                className={`flex ${
+                  message.role === "user" ? "justify-end" : "justify-start"
+                }`}
+              >
+                <div
+                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                    message.role === "user"
+                      ? "bg-rose-500 text-white"
+                      : "bg-white text-slate-700 border border-rose-100"
+                  }`}
+                >
+                  {message.content}
+                </div>
+              </div>
+            ))}
+
+            {loading && (
+              <div className="bg-white border border-rose-100 rounded-2xl px-4 py-3 text-sm text-slate-500 inline-flex items-center gap-2">
+                <Loader2 size={16} className="animate-spin" />
+                Escribiendo...
+              </div>
+            )}
+          </div>
+
+          <div className="p-4 border-t border-rose-100 bg-white">
+            <div className="flex gap-2">
+              <input
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") sendMessage();
+                }}
+                placeholder="Escribe tu consulta..."
+                className="flex-1 bg-slate-50 border border-rose-100 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-rose-200"
+              />
+
+              <button
+                onClick={sendMessage}
+                disabled={loading}
+                className="bg-rose-500 text-white h-12 w-12 rounded-2xl flex items-center justify-center hover:bg-rose-600 disabled:opacity-60 transition-colors"
+                aria-label="Enviar mensaje"
+              >
+                <Send size={18} />
+              </button>
+            </div>
+
+            <p className="text-[11px] text-slate-400 mt-3 leading-relaxed">
+              Orientación educativa. No reemplaza una consulta con pediatra, obstetra o consultora certificada.
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
 
 
 export default function App() {
@@ -261,6 +406,7 @@ export default function App() {
           <p className="text-slate-400 text-sm font-medium">© 2024 MamiGuía. Amando y acompañando cada paso.</p>
         </div>
       </footer>
+      <LactanciaAI />
     </div>
   );
 }
