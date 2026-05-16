@@ -27,7 +27,6 @@ const FAQItem = ({ question, answer }) => {
 };
 
 const LactanciaAI = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([
@@ -79,98 +78,80 @@ const LactanciaAI = () => {
   };
 
   return (
-    <>
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[60] bg-rose-500 text-white h-16 w-16 rounded-full shadow-2xl shadow-rose-200 flex items-center justify-center hover:bg-rose-600 transition-all"
-        aria-label="Abrir chat de lactancia"
-      >
-        <MessageCircle size={28} />
-      </button>
-
-      {isOpen && (
-        <div className="fixed right-4 bottom-4 md:right-6 md:bottom-6 z-[70] w-[calc(100vw-2rem)] max-w-md max-h-[calc(100vh-2rem)] bg-white rounded-3xl shadow-2xl border border-rose-100 overflow-hidden flex flex-col">
-          <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-rose-500 h-10 w-10 rounded-full flex items-center justify-center">
-                <Bot size={22} />
-              </div>
-              <div>
-                <p className="font-black leading-tight">Lía IA</p>
-                <p className="text-xs text-slate-300">Experta virtual en lactancia</p>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-slate-300 hover:text-white transition-colors"
-              aria-label="Cerrar chat"
-            >
-              <X size={22} />
-            </button>
+    <div className="w-full max-w-2xl mx-auto bg-white rounded-[2rem] shadow-2xl border border-rose-100 overflow-hidden flex flex-col">
+      <div className="bg-slate-900 text-white p-5 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-rose-500 h-10 w-10 rounded-full flex items-center justify-center">
+            <Bot size={22} />
           </div>
-
-          <div className="flex-1 min-h-[220px] max-h-[55vh] overflow-y-auto p-5 space-y-4 bg-rose-50/30">
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                    message.role === "user"
-                      ? "bg-rose-500 text-white"
-                      : "bg-white text-slate-700 border border-rose-100"
-                  }`}
-                >
-                  {message.content}
-                </div>
-              </div>
-            ))}
-
-            {loading && (
-              <div className="bg-white border border-rose-100 rounded-2xl px-4 py-3 text-sm text-slate-500 inline-flex items-center gap-2">
-                <Loader2 size={16} className="animate-spin" />
-                Escribiendo...
-              </div>
-            )}
-          </div>
-
-          <div className="p-4 border-t border-rose-100 bg-white">
-            <div className="flex gap-2">
-              <input
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") sendMessage();
-                }}
-                placeholder="Escribe tu consulta..."
-                className="flex-1 bg-slate-50 border border-rose-100 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-rose-200"
-              />
-
-              <button
-                onClick={sendMessage}
-                disabled={loading}
-                className="bg-rose-500 text-white h-12 w-12 rounded-2xl flex items-center justify-center hover:bg-rose-600 disabled:opacity-60 transition-colors"
-                aria-label="Enviar mensaje"
-              >
-                <Send size={18} />
-              </button>
-            </div>
-
-            <p className="text-[11px] text-slate-400 mt-3 leading-relaxed">
-              Orientación educativa. No reemplaza una consulta con pediatra, obstetra o consultora certificada.
-            </p>
+          <div>
+            <p className="font-black leading-tight">Lía IA</p>
+            <p className="text-xs text-slate-300">Experta virtual en lactancia</p>
           </div>
         </div>
-      )}
-    </>
+
+        <div className="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-xs font-bold">
+          Gratis
+        </div>
+      </div>
+
+      <div className="min-h-[360px] max-h-[520px] overflow-y-auto p-5 space-y-4 bg-rose-50/30">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              message.role === "user" ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                message.role === "user"
+                  ? "bg-rose-500 text-white"
+                  : "bg-white text-slate-700 border border-rose-100"
+              }`}
+            >
+              {message.content}
+            </div>
+          </div>
+        ))}
+
+        {loading && (
+          <div className="bg-white border border-rose-100 rounded-2xl px-4 py-3 text-sm text-slate-500 inline-flex items-center gap-2">
+            <Loader2 size={16} className="animate-spin" />
+            Escribiendo...
+          </div>
+        )}
+      </div>
+
+      <div className="p-4 border-t border-rose-100 bg-white">
+        <div className="flex gap-2">
+          <input
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") sendMessage();
+            }}
+            placeholder="Escribe tu consulta..."
+            className="flex-1 bg-slate-50 border border-rose-100 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-rose-200"
+          />
+
+          <button
+            onClick={sendMessage}
+            disabled={loading}
+            className="bg-rose-500 text-white h-12 w-12 rounded-2xl flex items-center justify-center hover:bg-rose-600 disabled:opacity-60 transition-colors"
+            aria-label="Enviar mensaje"
+          >
+            <Send size={18} />
+          </button>
+        </div>
+
+        <p className="text-[11px] text-slate-400 mt-3 leading-relaxed">
+          Orientación educativa. No reemplaza una consulta con pediatra, obstetra o consultora certificada.
+        </p>
+      </div>
+    </div>
   );
 };
-
-
 
 export default function App() {
   const HOTMART_LINK = "https://pay.hotmart.com/S105827106G"; // 
@@ -190,9 +171,10 @@ export default function App() {
             <Heart className="text-rose-500" fill="currentColor" size={24} />
             <span className="font-black text-xl tracking-tighter text-slate-800">MamiGuía</span>
           </div>
-          <a href="#precio" className="bg-rose-500 text-white px-5 py-2 rounded-full font-bold text-xs hover:bg-rose-600 transition-all shadow-md">
-            COMPRAR AHORA
-          </a>
+         <a href="#lia-ia" className="bg-rose-500 text-white px-5 py-2 rounded-full font-bold text-xs hover:bg-rose-600 transition-all shadow-md">
+  PROBAR IA
+</a>
+
         </div>
       </nav>
 
@@ -204,15 +186,22 @@ export default function App() {
               <Users size={14} /> <span>+2,500 mamás ayudadas este mes</span>
             </div>
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-[1.05] tracking-tight">
-              Amamanta con <span className="text-rose-500">seguridad</span>, sin dolor y disfrutando el proceso.
-            </h1>
+  Consulta gratis con <span className="text-rose-500">Lía IA</span> sobre lactancia.
+</h1>
+
             <p className="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-              Descubre el método paso a paso para lograr un agarre perfecto, aumentar tu producción y conectar profundamente con tu bebé desde el primer día.
-            </p>
+  Resuelve dudas sobre agarre, dolor, producción de leche, posiciones, extracción y señales de alerta con una asistente virtual disponible al instante.
+</p>
+
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-              <a href="#precio" className="bg-rose-500 text-white font-black py-5 px-10 rounded-2xl shadow-xl shadow-rose-200 hover:bg-rose-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 text-lg">
-                SÍ, QUIERO LA GUÍA AHORA <ArrowRight size={20} />
-              </a>
+              <a href="#lia-ia" className="bg-rose-500 text-white font-black py-5 px-10 rounded-2xl shadow-xl shadow-rose-200 hover:bg-rose-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 text-lg">
+    PROBAR IA GRATIS <Sparkles size={20} />
+</a>
+
+<a href="#precio" className="bg-white text-rose-600 border border-rose-200 font-black py-5 px-10 rounded-2xl hover:bg-rose-50 transition-all flex items-center justify-center gap-3 text-lg">
+    VER GUÍA COMPLETA <ArrowRight size={20} />
+</a>
+
             </div>
             <div className="flex items-center justify-center lg:justify-start gap-4 text-slate-400 text-sm">
               <div className="flex items-center gap-1"><ShieldCheck size={16} className="text-green-500"/> Pago Seguro</div>
@@ -240,6 +229,46 @@ export default function App() {
           </div>
         </div>
       </header>
+      {/* --- SECCIÓN IA: CONSULTA GRATIS --- */}
+      <section id="lia-ia" className="py-24 bg-white border-t border-rose-50">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 bg-rose-100 px-3 py-1.5 rounded-full text-rose-600 font-bold text-xs uppercase tracking-widest">
+              <Sparkles size={14} /> <span>Consulta gratis al instante</span>
+            </div>
+
+            <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+              Pregúntale a <span className="text-rose-500">Lía IA</span> antes de rendirte con la lactancia.
+            </h2>
+
+            <p className="text-lg text-slate-600 leading-relaxed">
+              Recibe orientación inmediata sobre dolor, agarre, producción, posiciones, extracción, rechazo del pecho y señales de alerta.
+            </p>
+
+            <div className="grid sm:grid-cols-2 gap-4 pt-4">
+              {[
+                "Dolor o grietas",
+                "Bebé no se prende",
+                "Dudas de producción",
+                "Banco de leche"
+              ].map((text, i) => (
+                <div key={i} className="flex items-center gap-3 bg-rose-50 rounded-2xl px-4 py-3 border border-rose-100">
+                  <CheckCircle2 className="text-green-500 flex-shrink-0" size={18} />
+                  <span className="text-sm font-bold text-slate-700">{text}</span>
+                </div>
+              ))}
+            </div>
+
+            <a href="#precio" className="inline-flex items-center justify-center gap-2 text-rose-600 font-black hover:text-rose-700 transition-colors">
+              Prefiero la guía completa <ArrowRight size={18} />
+            </a>
+          </div>
+
+          <div className="lg:col-span-7">
+            <LactanciaAI />
+          </div>
+        </div>
+      </section>
 
       {/* --- SECCIÓN 2: AGITACIÓN DEL DOLOR (Interés) --- */}
       <section className="py-24 bg-white">
@@ -406,7 +435,6 @@ export default function App() {
           <p className="text-slate-400 text-sm font-medium">© 2024 MamiGuía. Amando y acompañando cada paso.</p>
         </div>
       </footer>
-      <LactanciaAI />
     </div>
   );
 }
