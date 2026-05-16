@@ -1,9 +1,3 @@
-import OpenAI from "openai";
-
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
 const SYSTEM_PROMPT = `
 Eres Lía, una asistente virtual experta en lactancia materna.
 
@@ -21,21 +15,58 @@ export async function POST(request) {
     const body = await request.json();
     const messages = Array.isArray(body.messages) ? body.messages : [];
 
-    const safeMessages = messages.slice(-10).map((message) => ({
-      role: message.role === "assistant" ? "assistant" : "user",
-      content: String(message.content || "").slice(0, 1200)
-    }));
+    const conversation = messages
+      .slice(-10)
+      .map((message) => {
+        const role = message.role === "assistant" ? "Asistente" : "Usuaria";
+        const content = String(message.content || "").slice(0, 1200);
+        return `${role}: ${content}`;
+      })
+      .join("\n\n");
 
-    const response = await client.responses.create({
-      model: "gpt-5-mini",
-      instructions: SYSTEM_PROMPT,
-      input: safeMessages,
-      max_output_tokens: 450
-    });
+    const prompt = `${SYSTEM_PROMPT}
 
-    return Response.json({
-      answer: response.output_text
-    });
+Conversación:
+${conversation}
+
+Responde como Lía, con ayuda concreta y empática.`;
+
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [{ text: prompt }]
+            }
+          ],
+          generationConfig: {
+            temperature: 0.5,
+            maxOutputTokens: 450
+          }
+        })
+      }
+    );
+
+    const data = await geminiResponse.json();
+
+    if (!geminiResponse.ok) {
+      console.error(data);
+      throw new Error(data?.error?.message || "Gemini API error");
+    }
+
+    const answer =
+      data?.candidates?.[0]?.content?.parts
+        ?.map((part) => part.text || "")
+        .join("")
+        .trim() || "No pude generar una respuesta ahora.";
+
+    return Response.json({ answer });
   } catch (error) {
     console.error(error);
 
