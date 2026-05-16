@@ -27,7 +27,7 @@ export async function POST(request) {
     }));
 
     const response = await client.responses.create({
-      model: process.env.OPENAI_MODEL || "gpt-5.5",
+      model: "gpt-5-mini",
       instructions: SYSTEM_PROMPT,
       input: safeMessages,
       max_output_tokens: 450
